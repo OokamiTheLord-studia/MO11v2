@@ -7,12 +7,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MO11v2", "MO11v2.vcxproj", 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug with logs|x64 = Debug with logs|x64
+		Debug with logs|x86 = Debug with logs|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug with logs|x64.ActiveCfg = Debug with logs|x64
+		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug with logs|x64.Build.0 = Debug with logs|x64
+		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug with logs|x86.ActiveCfg = Debug with logs|Win32
+		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug with logs|x86.Build.0 = Debug with logs|Win32
 		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug|x64.ActiveCfg = Debug|x64
 		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug|x64.Build.0 = Debug|x64
 		{9B10E277-C6FF-4B68-9BC2-49DC470FB44A}.Debug|x86.ActiveCfg = Debug|Win32
