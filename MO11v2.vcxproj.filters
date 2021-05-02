@@ -18,6 +18,9 @@
     <ClCompile Include="MO11v2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="net.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="net.h">

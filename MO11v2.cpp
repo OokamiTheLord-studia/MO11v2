@@ -22,4 +22,8 @@ int main()
     std::function<double(double)> temporary_function{ [](double temp) {return 0; } };
 
     MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, temporary_function, temporary_function, temporary_function);
+    std::cout << tempNet.at(t_begin, x_begin) << std::endl;
+    std::cout << tempNet.at(t_max, x_end) << std::endl;
+    tempNet.at(t_max, x_end) = 0.75;
+    std::cout << tempNet.at(t_max, x_end) << std::endl;
 }

@@ -198,6 +198,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MO11v2.cpp" />
+    <ClCompile Include="net.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simpleLogger.h" />
