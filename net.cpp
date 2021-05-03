@@ -1,5 +1,6 @@
 #include "net.h"
 #include "simpleLogger.h"
+#include <fstream>
 
 namespace MO
 {
@@ -111,6 +112,28 @@ namespace MO
 	{
 		//TODO: Dodaæ obs³ugê wyj¹tków
 		return matrix.at(t_values.at(t)).at(x_values.at(x));
+	}
+
+	void Net::dump(std::string filename)
+	{
+		std::ofstream file;
+		file.open(filename);
+		//file << ",";
+		for (auto it = x_values.cbegin(); it != x_values.cend(); it++)
+		{
+			file << "," << it->first;
+		}
+		file << std::endl;
+		for (auto t = t_values.crbegin(); t != t_values.crend(); t++)
+		{
+			file << t->first;
+			for (auto x = x_values.cbegin(); x != x_values.cend(); x++)
+			{
+				file << "," << matrix.at(t->second).at(x->second);
+			}
+			file << std::endl;
+		}
+		file.close();
 	}
 }
 

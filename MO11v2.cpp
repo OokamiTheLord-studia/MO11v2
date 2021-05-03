@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <functional>;
+#include <functional>
 #include"net.h"
 
 int main()
@@ -21,9 +21,15 @@ int main()
 
     std::function<double(double)> temporary_function{ [](double temp) {return 0; } };
 
-    MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, temporary_function, temporary_function, temporary_function);
+    std::function<double(double)> start_condition{ [&](double x) {return x < 0 ? 0 : exp(-x / b); } };
+    std::function<double(double)> edge_condition{ [](double t) {return 0; } };
+
+    MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, start_condition, edge_condition, edge_condition);
+    /*MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, temporary_function, temporary_function, temporary_function);
     std::cout << tempNet.at(t_begin, x_begin) << std::endl;
     std::cout << tempNet.at(t_max, x_end) << std::endl;
     tempNet.at(t_max, x_end) = 0.75;
-    std::cout << tempNet.at(t_max, x_end) << std::endl;
+    std::cout << tempNet.at(t_max, x_end) << std::endl;*/
+
+    tempNet.dump("testfile.csv");
 }

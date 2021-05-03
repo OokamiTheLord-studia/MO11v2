@@ -8,6 +8,7 @@
 #include <iterator>
 #include <cmath>
 #include <iostream>
+#include <string>
 #include <map>
 
 
@@ -16,10 +17,14 @@ namespace MO
 {
 	//TODO: Przenieœæ definicje do cpp
 	//TODO: Napisaæ funkcje do dostêpu
+	//	at przyjmuj¹cy integery
+	//  getx zwracaj¹cy wartoœæ
+	//  gett zwracaj¹cy wartoœæ
 	class Net
 	{
 		//std::vector<double> x_values;
 		//std::vector<double> t_values;
+		//TODO: Zastanowiæ siê czy korzystaæ z mapy, wektora, czy dwóch map w obie strony (mapowanie czego na co bêdzie czêœciej potrzebne, i dostêp po czym)
 		std::map<double, unsigned int> x_values;
 		std::map<double, unsigned int> t_values;
 		std::vector<std::vector<double>> matrix;
@@ -39,6 +44,7 @@ namespace MO
 		);
 
 		double& at(const double t, const double x);
+		void dump(std::string filename);
 	};
 };
 
