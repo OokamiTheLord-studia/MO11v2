@@ -6,6 +6,7 @@
 #include <functional>
 #include "net.h"
 #include "FillableNet.h"
+#include "KMB.h"
 
 constexpr double t_max{ 1 };
 constexpr double b{ 0.1 };
@@ -13,7 +14,7 @@ constexpr double d{ 1 };
 
 double analyticSolution(double t, double x)
 {
-    return 0.5 * exp(((d * t) / (b * b)) - (x / b)) * erfc(((2 * d * t) / (b - x)) / (2 * sqrt(d * t)));
+    return 0.5 * exp(((d * t) / (b * b)) - (x / b)) * erfc((((2 * d * t) /b) - x) / (2 * sqrt(d * t)));
 }
 
 int main()
@@ -26,7 +27,7 @@ int main()
 
     std::function<double(double)> temporary_function{ [](double temp) {return 0; } };
 
-    std::function<double(double)> start_condition{ [&](double x) {return x > 0 ? 0 : exp(-x / b); } };
+    std::function<double(double)> start_condition{ [&](double x) {return x < 0 ? 0 : exp(-x / b); } };
     std::function<double(double)> corrected_start_condition{ [&](double x) {return x > 0 ? 0 : exp(-x / b); } };
     std::function<double(double)> edge_condition_derivative_parameter{ [](double t) {return 0; } };
     std::function<double(double)> edge_condition_function_parameter{ [](double t) {return 1; } };
@@ -34,15 +35,23 @@ int main()
 
 
 
-    MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+    //MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
     /*MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, temporary_function, temporary_function, temporary_function);
     std::cout << tempNet.at(t_begin, x_begin) << std::endl;
     std::cout << tempNet.at(t_max, x_end) << std::endl;
     tempNet.at(t_max, x_end) = 0.75;
     std::cout << tempNet.at(t_max, x_end) << std::endl;*/
 
-    tempNet.dump("testfile2.csv");
+    //tempNet.dump("testfile2.csv");
 
     MO::FillableNet analyticNet(x_begin, x_end, h, t_begin, t_max, dt, analyticSolution);
-    //analyticNet.dump("analyticSolution.csv");
+    analyticNet.dump("analyticSolution.csv");
+
+    constexpr double KMBh{ 0.05 };
+    constexpr double KMBlambda{ dt / (KMBh * KMBh) };
+
+    MO::Net KMBSolvedNet(x_begin, x_end, KMBh, t_begin, t_max, dt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+    MO::KMB kmbSolver(KMBlambda);
+    KMBSolvedNet.solve(&kmbSolver);
+    KMBSolvedNet.dump("KMB_corrected.csv");
 }
