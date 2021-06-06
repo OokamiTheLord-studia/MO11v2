@@ -4,6 +4,7 @@
 
 namespace MO
 {
+
 	Net::Net(
 		const double a
 		, const double b
@@ -13,9 +14,21 @@ namespace MO
 		, const double dt
 		//sprawdziæ czy mog¹ byæ const
 		, std::function<double(double)> start_condition
-		, std::function<double(double)> left_edge_condition
-		, std::function<double(double)> right_edge_condition
-	)
+		//, std::function<double(double)> left_edge_condition
+		//, std::function<double(double)> right_edge_condition
+		, std::function<double(double)> left_edge_condition_second_derivative
+		, std::function<double(double)> left_edge_condition_first_derivative
+		, std::function<double(double)> left_edge_condition_function
+		, std::function<double(double)> right_edge_condition_second_derivative
+		, std::function<double(double)> right_edge_condition_first_derivative
+		, std::function<double(double)> right_edge_condition_function
+	) :
+		left_edge_condition_second_derivative(left_edge_condition_second_derivative)
+		, left_edge_condition_first_derivative(left_edge_condition_first_derivative)
+		, left_edge_condition_function(left_edge_condition_function)
+		, right_edge_condition_second_derivative(right_edge_condition_second_derivative)
+		, right_edge_condition_first_derivative(right_edge_condition_first_derivative)
+		, right_edge_condition_function(right_edge_condition_function)
 	{
 		//TODO: Przemyœleæ optymalizacjê
 		//TODO: Asercja wartoœci
@@ -37,6 +50,8 @@ namespace MO
 		{
 			i.resize(x_count);
 		}
+		x_positions.resize(x_count);
+		t_positions.resize(t_count);
 
 		LOG("Net reserved memory")
 
@@ -44,6 +59,7 @@ namespace MO
 			auto& matrix_first_row = matrix.front();
 		//x_values.front() = a;
 		x_values.insert({ a, 0 });
+		x_positions[0] = a;
 		matrix_first_row.front() = start_condition(a);
 		//mo¿e da siê tu u¿yæ iteratora?
 		{
@@ -54,6 +70,7 @@ namespace MO
 			{
 				//x_values[idx] = i;
 				x_values.insert({ i, idx });
+				x_positions[idx] = i;
 				matrix_first_row[idx] = start_condition(i);
 
 				i += h;
@@ -62,12 +79,14 @@ namespace MO
 		}
 		//x_values.back() = b;
 		x_values.insert({ b, x_count - 1 });
+		x_positions[x_count - 1] = b;
 		matrix_first_row.back() = start_condition(b);
 
 		LOG("Net filled first row")
-			//fill edges and set middle to 0
+			//set middle to 0
 			//t_values.front() = c;
 			t_values.insert({ c, 0 });
+		t_positions[0] = c;
 		{
 			double i{ c + dt };
 			unsigned int idx{ 1 };
@@ -76,12 +95,13 @@ namespace MO
 			{
 				//t_values[idx] = i;
 				t_values.insert({ i, idx });
-				matrix[idx].front() = left_edge_condition(i);
+				t_positions[idx] = i;
+				//matrix[idx].front() = left_edge_condition(i);
 				for (auto j{ std::next(matrix[idx].begin()) }; j < std::prev(matrix[idx].end()); j++)
 				{
 					*j = 0;
 				}
-				matrix[idx].back() = right_edge_condition(i);
+				//matrix[idx].back() = right_edge_condition(i);
 
 				if (!(idx % 100))
 				{
@@ -97,21 +117,29 @@ namespace MO
 
 			//t_values.back() = d;
 		t_values.insert({ d, t_count - 1 });
+		t_positions[t_count - 1] = d;
 		auto& matrix_last_row = matrix.back();
-		matrix_last_row.front() = left_edge_condition(d);
+		//matrix_last_row.front() = left_edge_condition(d);
 		for (auto j{ std::next(matrix_last_row.begin()) }; j < std::prev(matrix_last_row.end()); j++)
 		{
 			*j = 0;
 		}
-		matrix_last_row.back() = right_edge_condition(d);
+		//matrix_last_row.back() = right_edge_condition(d);
 
 		LOG("Constructor is done. Thank you forever")
 	};
+
+		
 
 	double& Net::at(const double t, const double x)
 	{
 		//TODO: Dodaæ obs³ugê wyj¹tków
 		return matrix.at(t_values.at(t)).at(x_values.at(x));
+	}
+
+	std::vector<std::vector<double>>* Net::getMatrix()
+	{
+		return &matrix;
 	}
 
 	void Net::dump(std::string filename)

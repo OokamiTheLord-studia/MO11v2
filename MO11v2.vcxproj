@@ -197,15 +197,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FillableNet.cpp" />
+    <ClCompile Include="KMB.cpp" />
     <ClCompile Include="MO11v2.cpp" />
     <ClCompile Include="net.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FillableNet.h" />
+    <ClInclude Include="KMB.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="simpleLogger.h" />
     <ClInclude Include="net.h" />
+    <ClInclude Include="SolvingMethod.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MO11v2.rc" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
