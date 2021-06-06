@@ -16,6 +16,7 @@
 
 namespace MO
 {
+	class SolvingMethod;
 	//TODO: Przenieœæ definicje do cpp
 	//TODO: Napisaæ funkcje do dostêpu
 	//	at przyjmuj¹cy integery
