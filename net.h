@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "SolvingMethod.h"
 
 
 
@@ -65,6 +66,8 @@ namespace MO
 		std::vector<std::vector<double>>* getMatrix();
 
 		void dump(std::string filename);
+
+		void solve(MO::SolvingMethod&);
 	};
 };
 

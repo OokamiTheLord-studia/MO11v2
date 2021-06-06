@@ -6,7 +6,8 @@ namespace MO
 
 	class SolvingMethod
 	{
-		virtual void solveNet(MO::Net) = 0;
+	public:
+		virtual void solveNet(MO::Net*) = 0;
 	};
 
 }

@@ -6,7 +6,8 @@ namespace MO
     class KMB :
         public SolvingMethod
     {
-        void solveNet(MO::Net);
+    public:
+        void solveNet(MO::Net*);
     };
 
 }

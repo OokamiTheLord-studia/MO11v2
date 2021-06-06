@@ -2,7 +2,7 @@
 
 namespace MO
 {
-	void MO::KMB::solveNet(MO::Net net)
+	void MO::KMB::solveNet(MO::Net* net)
 	{
 
 	}

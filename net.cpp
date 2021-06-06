@@ -163,5 +163,10 @@ namespace MO
 		}
 		file.close();
 	}
+
+	void Net::solve(MO::SolvingMethod& method)
+	{
+		method.solveNet(this);
+	}
 }
 
