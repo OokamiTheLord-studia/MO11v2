@@ -7,7 +7,7 @@ namespace MO
         public SolvingMethod
     {
     public:
-        void solveNet(MO::Net*);
+        void solveNet(Net*);
     };
 
 }

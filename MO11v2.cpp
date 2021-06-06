@@ -28,11 +28,13 @@ int main()
 
     std::function<double(double)> start_condition{ [&](double x) {return x > 0 ? 0 : exp(-x / b); } };
     std::function<double(double)> corrected_start_condition{ [&](double x) {return x > 0 ? 0 : exp(-x / b); } };
-    std::function<double(double)> edge_condition{ [](double t) {return 0; } };
+    std::function<double(double)> edge_condition_derivative_parameter{ [](double t) {return 0; } };
+    std::function<double(double)> edge_condition_function_parameter{ [](double t) {return 1; } };
+    std::function<double(double)> edge_condition_free_function_parameter{ [](double t) {return 0; } };
 
 
 
-    MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, start_condition, edge_condition, edge_condition, edge_condition, edge_condition, edge_condition, edge_condition);
+    MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
     /*MO::Net tempNet(x_begin, x_end, h, t_begin, t_max, dt, temporary_function, temporary_function, temporary_function);
     std::cout << tempNet.at(t_begin, x_begin) << std::endl;
     std::cout << tempNet.at(t_max, x_end) << std::endl;

@@ -16,19 +16,20 @@ namespace MO
 		, std::function<double(double)> start_condition
 		//, std::function<double(double)> left_edge_condition
 		//, std::function<double(double)> right_edge_condition
-		, std::function<double(double)> left_edge_condition_second_derivative
-		, std::function<double(double)> left_edge_condition_first_derivative
+		, std::function<double(double)> left_edge_condition_derivative
 		, std::function<double(double)> left_edge_condition_function
-		, std::function<double(double)> right_edge_condition_second_derivative
-		, std::function<double(double)> right_edge_condition_first_derivative
+		, std::function<double(double)> left_edge_condition_free_function
+		, std::function<double(double)> right_edge_condition_derivative
 		, std::function<double(double)> right_edge_condition_function
+		, std::function<double(double)> right_edge_condition_free_function
 	) :
-		left_edge_condition_second_derivative(left_edge_condition_second_derivative)
-		, left_edge_condition_first_derivative(left_edge_condition_first_derivative)
+		left_edge_condition_derivative(left_edge_condition_derivative)
 		, left_edge_condition_function(left_edge_condition_function)
-		, right_edge_condition_second_derivative(right_edge_condition_second_derivative)
-		, right_edge_condition_first_derivative(right_edge_condition_first_derivative)
+		, left_edge_condition_free_function(left_edge_condition_free_function)
+		, right_edge_condition_derivative(right_edge_condition_derivative)
 		, right_edge_condition_function(right_edge_condition_function)
+		, right_edge_condition_free_function(right_edge_condition_free_function)
+		, h(h)
 	{
 		//TODO: Przemyœleæ optymalizacjê
 		//TODO: Asercja wartoœci
@@ -164,9 +165,37 @@ namespace MO
 		file.close();
 	}
 
-	void Net::solve(MO::SolvingMethod& method)
+	void Net::solve(SolvingMethod* method)
 	{
-		method.solveNet(this);
+		method->solveNet(this);
+	}
+
+	void Net::solveLeftEdgeCondition(unsigned int t_pos)
+	{
+
+		auto u0 = matrix.at(t_pos).at(0);
+		auto u1 = matrix.at(t_pos).at(1);
+
+		u0 = (1 / (left_edge_condition_function(t_positions[t_pos]) - left_edge_condition_derivative(t_positions[t_pos]))) * (((-left_edge_condition_derivative(t_positions[t_pos]) / h) * u1) - left_edge_condition_free_function(t_positions[t_pos]));
+	}
+
+	void Net::solveLeftEdgeCondition(double t)
+	{
+		this->solveLeftEdgeCondition(t_values.at(t));
+	}
+
+	void Net::solveRightEdgeCondition(unsigned int t_pos)
+	{
+
+		auto u0 = matrix.at(t_pos).at(0);
+		auto u1 = matrix.at(t_pos).at(1);
+
+		u0 = (1 / (right_edge_condition_function(t_positions[t_pos]) - right_edge_condition_derivative(t_positions[t_pos]))) * (((-right_edge_condition_derivative(t_positions[t_pos]) / h) * u1) - right_edge_condition_free_function(t_positions[t_pos]));
+	}
+
+	void Net::solveRightEdgeCondition(double t)
+	{
+		this->solveRightEdgeCondition(t_values.at(t));
 	}
 }
 

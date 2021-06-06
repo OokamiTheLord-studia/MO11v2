@@ -32,12 +32,13 @@ namespace MO
 		std::map<double, unsigned int> t_values;
 		std::vector<double> t_positions;
 		std::vector<std::vector<double>> matrix;
-		std::function<double(double)> left_edge_condition_second_derivative;
-		std::function<double(double)> left_edge_condition_first_derivative;
+		std::function<double(double)> left_edge_condition_derivative;
 		std::function<double(double)> left_edge_condition_function;
-		std::function<double(double)> right_edge_condition_second_derivative;
-		std::function<double(double)> right_edge_condition_first_derivative;
+		std::function<double(double)> left_edge_condition_free_function;
+		std::function<double(double)> right_edge_condition_derivative;
 		std::function<double(double)> right_edge_condition_function;
+		std::function<double(double)> right_edge_condition_free_function;
+		const double h;
 
 	public:
 		Net(
@@ -51,12 +52,12 @@ namespace MO
 			, std::function<double(double)> start_condition
 			/*, std::function<double(double)> left_edge_condition
 			, std::function<double(double)> right_edge_condition*/
-			, std::function<double(double)> left_edge_condition_second_derivative
-			, std::function<double(double)> left_edge_condition_first_derivative
+			, std::function<double(double)> left_edge_condition_derivative
 			, std::function<double(double)> left_edge_condition_function
-			, std::function<double(double)> right_edge_condition_second_derivative
-			, std::function<double(double)> right_edge_condition_first_derivative
+			, std::function<double(double)> left_edge_condition_free_function
+			, std::function<double(double)> right_edge_condition_derivative
 			, std::function<double(double)> right_edge_condition_function
+			, std::function<double(double)> right_edge_condition_free_function
 		);
 
 		
@@ -67,7 +68,13 @@ namespace MO
 
 		void dump(std::string filename);
 
-		void solve(MO::SolvingMethod&);
+		void solve(SolvingMethod*);
+
+		void solveLeftEdgeCondition(unsigned int);
+		void solveLeftEdgeCondition(double);
+
+		void solveRightEdgeCondition(unsigned int);
+		void solveRightEdgeCondition(double);
 	};
 };
 

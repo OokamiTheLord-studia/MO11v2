@@ -1,13 +1,14 @@
 #pragma once
-#include "net.h"
+//#include "net.h"
 
 namespace MO
 {
+	class Net;
 
 	class SolvingMethod
 	{
 	public:
-		virtual void solveNet(MO::Net*) = 0;
+		virtual void solveNet(Net*) = 0;
 	};
 
 }
