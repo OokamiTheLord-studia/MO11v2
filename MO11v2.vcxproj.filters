@@ -27,6 +27,12 @@
     <ClCompile Include="FillableNet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CN_GaussSiedel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CN_Thomas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="net.h">
@@ -45,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CN_GaussSiedel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CN_Thomas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

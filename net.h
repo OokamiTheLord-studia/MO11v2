@@ -28,20 +28,23 @@ namespace MO
 		//std::vector<double> t_values;
 		//TODO: Zastanowiæ siê czy korzystaæ z mapy, wektora, czy dwóch map w obie strony (mapowanie czego na co bêdzie czêœciej potrzebne, i dostêp po czym)
 	protected:
-		std::map<double, unsigned int> x_values;
+		std::map<double, size_t> x_values;
 		std::vector<double> x_positions;
-		std::map<double, unsigned int> t_values;
+		std::map<double, size_t> t_values;
 		std::vector<double> t_positions;
 		std::vector<std::vector<double>> matrix;
-		std::function<double(double)> left_edge_condition_derivative;
-		std::function<double(double)> left_edge_condition_function;
-		std::function<double(double)> left_edge_condition_free_function;
-		std::function<double(double)> right_edge_condition_derivative;
-		std::function<double(double)> right_edge_condition_function;
-		std::function<double(double)> right_edge_condition_free_function;
-		const double h;
+		
 
 	public:
+
+		const std::function<double(double)> left_edge_condition_derivative;
+		const std::function<double(double)> left_edge_condition_function;
+		const std::function<double(double)> left_edge_condition_free_function;
+		const std::function<double(double)> right_edge_condition_derivative;
+		const std::function<double(double)> right_edge_condition_function;
+		const std::function<double(double)> right_edge_condition_free_function;
+		const double h;
+
 		Net(
 			const double a
 			, const double b
@@ -71,11 +74,14 @@ namespace MO
 
 		void solve(SolvingMethod*);
 
-		void solveLeftEdgeCondition(unsigned int);
+		void solveLeftEdgeCondition(size_t);
 		void solveLeftEdgeCondition(double);
 
-		void solveRightEdgeCondition(unsigned int);
+		void solveRightEdgeCondition(size_t);
 		void solveRightEdgeCondition(double);
+
+		double stepToTime(size_t);
+		double positionToCoordinate(size_t);
 	};
 };
 

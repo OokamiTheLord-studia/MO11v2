@@ -38,8 +38,8 @@ namespace MO
 
 
 
-			const unsigned int x_count{ static_cast<unsigned int>(std::floor((b - a) / h)) };
-		const unsigned int t_count{ static_cast<unsigned int>(std::floor((d - c) / dt)) };
+			const size_t x_count{ static_cast<size_t>(std::floor((b - a) / h)) };
+		const size_t t_count{ static_cast<size_t>(std::floor((d - c) / dt)) };
 
 		LOG("x_count - " << x_count)
 			LOG("t_count - " << t_count)
@@ -170,7 +170,7 @@ namespace MO
 		method->solveNet(this);
 	}
 
-	void Net::solveLeftEdgeCondition(unsigned int t_pos)
+	void Net::solveLeftEdgeCondition(size_t t_pos)
 	{
 
 		auto u0 = matrix.at(t_pos).at(0);
@@ -184,7 +184,7 @@ namespace MO
 		this->solveLeftEdgeCondition(t_values.at(t));
 	}
 
-	void Net::solveRightEdgeCondition(unsigned int t_pos)
+	void Net::solveRightEdgeCondition(size_t t_pos)
 	{
 
 		auto u0 = matrix.at(t_pos).at(0);
@@ -196,6 +196,16 @@ namespace MO
 	void Net::solveRightEdgeCondition(double t)
 	{
 		this->solveRightEdgeCondition(t_values.at(t));
+	}
+
+	double Net::stepToTime(size_t t_pos)
+	{
+		return t_positions.at(t_pos);
+	}
+
+	double Net::positionToCoordinate(size_t x_pos)
+	{
+		return x_positions.at(x_pos);
 	}
 }
 

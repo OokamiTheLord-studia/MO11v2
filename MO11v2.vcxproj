@@ -197,12 +197,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CN_GaussSiedel.cpp" />
+    <ClCompile Include="CN_Thomas.cpp" />
     <ClCompile Include="FillableNet.cpp" />
     <ClCompile Include="KMB.cpp" />
     <ClCompile Include="MO11v2.cpp" />
     <ClCompile Include="net.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CN_GaussSiedel.h" />
+    <ClInclude Include="CN_Thomas.h" />
     <ClInclude Include="FillableNet.h" />
     <ClInclude Include="KMB.h" />
     <ClInclude Include="resource.h" />
