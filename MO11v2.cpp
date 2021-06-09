@@ -7,6 +7,7 @@
 #include "net.h"
 #include "FillableNet.h"
 #include "KMB.h"
+#include "CN_Thomas.h"
 
 constexpr double t_max{ 1 };
 constexpr double b{ 0.1 };
@@ -44,14 +45,22 @@ int main()
 
     //tempNet.dump("testfile2.csv");
 
-    MO::FillableNet analyticNet(x_begin, x_end, h, t_begin, t_max, dt, analyticSolution);
-    analyticNet.dump("analyticSolution.csv");
+    /*MO::FillableNet analyticNet(x_begin, x_end, h, t_begin, t_max, dt, analyticSolution);
+    analyticNet.dump("analyticSolution.csv");*/
 
     constexpr double KMBh{ 0.05 };
     constexpr double KMBlambda{ dt / (KMBh * KMBh) };
 
     MO::Net KMBSolvedNet(x_begin, x_end, KMBh, t_begin, t_max, dt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
     MO::KMB kmbSolver(KMBlambda);
-    KMBSolvedNet.solve(&kmbSolver);
-    KMBSolvedNet.dump("KMB_corrected.csv");
+    /*KMBSolvedNet.solve(&kmbSolver);
+    KMBSolvedNet.dump("KMB_corrected.csv");*/
+
+    constexpr double CNh{ 0.05 };
+    constexpr double CNdt{ 0.0025 };
+
+    MO::Net CNThomasSolvedNet(x_begin, x_end, CNh, t_begin, t_max, CNdt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+    MO::Crank_Nicolson::CN_Thomas CNThomasSolver{ CNdt / (CNh * CNh) };
+    CNThomasSolvedNet.solve(&CNThomasSolver);
+    CNThomasSolvedNet.dump("CNThomas.csv");
 }
