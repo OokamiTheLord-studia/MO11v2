@@ -10,15 +10,15 @@ namespace MO
 
 		void CN_Thomas::solveNet(Net* net)
 		{
-			auto matrix{ net->getMatrix()};
+			auto matrix{ net->getMatrix() };
 
 			const double half_lambda{ lambda / 2 };
 			const double minus_one_lambda{ -1 - lambda };
-			
+
 
 			/*for (
-				auto past_iterator{ matrix->begin() }, current_iterator{ std::next(past_iterator) }; 
-				current_iterator != matrix->end(); 
+				auto past_iterator{ matrix->begin() }, current_iterator{ std::next(past_iterator) };
+				current_iterator != matrix->end();
 				past_iterator++, current_iterator++
 				)*/
 			for (

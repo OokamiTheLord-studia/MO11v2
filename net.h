@@ -33,7 +33,7 @@ namespace MO
 		std::map<double, size_t> t_values;
 		std::vector<double> t_positions;
 		std::vector<std::vector<double>> matrix;
-		
+
 
 	public:
 
@@ -64,7 +64,7 @@ namespace MO
 			, std::function<double(double)> right_edge_condition_free_function
 		);
 
-		
+
 
 		double& at(const double t, const double x);
 

@@ -38,7 +38,9 @@ namespace MO
 
 
 
-			const size_t x_count{ static_cast<size_t>(std::floor((b - a) / h)) };
+			const size_t x_count {
+			static_cast<size_t>(std::floor((b - a) / h))
+		};
 		const size_t t_count{ static_cast<size_t>(std::floor((d - c) / dt)) };
 
 		LOG("x_count - " << x_count)
@@ -46,7 +48,7 @@ namespace MO
 			//reserve
 			//x_values.resize(x_count);
 		//t_values.resize(t_count);
-		matrix.resize(t_count);
+			matrix.resize(t_count);
 		for (auto& i : matrix)
 		{
 			i.resize(x_count);
@@ -116,7 +118,7 @@ namespace MO
 
 		LOG("Net will fill last row now");
 
-			//t_values.back() = d;
+		//t_values.back() = d;
 		t_values.insert({ d, t_count - 1 });
 		t_positions[t_count - 1] = d;
 		auto& matrix_last_row = matrix.back();
@@ -130,7 +132,7 @@ namespace MO
 		LOG("Constructor is done. Thank you forever")
 	};
 
-		
+
 
 	double& Net::at(const double t, const double x)
 	{
