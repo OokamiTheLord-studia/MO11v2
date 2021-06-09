@@ -1,6 +1,8 @@
 #include "CN_Thomas.h"
 //#include <iterator>
 #include <limits>
+#include <iostream>
+#include "simpleLogger.h"
 
 namespace MO
 {
@@ -14,6 +16,7 @@ namespace MO
 
 			const double half_lambda{ lambda / 2 };
 			const double minus_one_lambda{ -1 - lambda };
+			const double lambda_minus_one{ 1 - lambda };
 
 
 			/*for (
@@ -49,7 +52,7 @@ namespace MO
 					l.push_back(half_lambda);
 					u.push_back(half_lambda);
 					d.push_back(minus_one_lambda);
-					b.push_back(-((half_lambda * matrix->at(past_position).at(i - 1)) + (minus_one_lambda * matrix->at(past_position).at(i)) + (half_lambda * matrix->at(past_position).at(i + 1))));
+					b.push_back(-((half_lambda * matrix->at(past_position).at(i - 1)) + (lambda_minus_one * matrix->at(past_position).at(i)) + (half_lambda * matrix->at(past_position).at(i + 1))));
 				}
 				l.push_back(-(net->right_edge_condition_derivative(current_time)) / net->h);
 				b.push_back(-(net->right_edge_condition_free_function(current_time)));
@@ -77,7 +80,7 @@ namespace MO
 			for (size_t i = 1; i < element_count; i++)
 			{
 				mi.push_back(d[i] - l[i - 1] * (1 / mi[i - 1]) * u[i - 1]);
-				ni.push_back(d[i] - l[i - 1] * (1 / mi[i - 1]) * ni[i - 1]);
+				ni.push_back(b[i] - l[i - 1] * (1 / mi[i - 1]) * ni[i - 1]);
 			}
 
 			std::vector<double> solutions;
