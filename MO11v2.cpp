@@ -8,6 +8,7 @@
 #include "FillableNet.h"
 #include "KMB.h"
 #include "CN_Thomas.h"
+#include "CN_GaussSiedel.h"
 
 constexpr double t_max{ 1 };
 constexpr double b{ 0.1 };
@@ -61,6 +62,11 @@ int main()
 
     MO::Net CNThomasSolvedNet(x_begin, x_end, CNh, t_begin, t_max, CNdt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
     MO::Crank_Nicolson::CN_Thomas CNThomasSolver{ CNdt / (CNh * CNh) };
-    CNThomasSolvedNet.solve(&CNThomasSolver);
-    CNThomasSolvedNet.dump("CNThomas.csv");
+    /*CNThomasSolvedNet.solve(&CNThomasSolver);
+    CNThomasSolvedNet.dump("CNThomas.csv");*/
+
+    MO::Net CNGaussSiedelSolvedNet(x_begin, x_end, CNh, t_begin, t_max, CNdt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+    MO::Crank_Nicolson::CN_GaussSiedel CNGaussSiedelSolver{ CNdt / (CNh * CNh) };
+    CNGaussSiedelSolvedNet.solve(&CNGaussSiedelSolver);
+    CNGaussSiedelSolvedNet.dump("CNGaussSiedel.csv");
 }
