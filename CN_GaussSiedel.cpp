@@ -1,4 +1,6 @@
 #include "CN_GaussSiedel.h"
+#include <cmath>
+#include <iostream>
 
 namespace MO
 {
@@ -57,7 +59,8 @@ namespace MO
 				d.push_back(net->right_edge_condition_derivative(current_time) / net->h + net->right_edge_condition_function(current_time));
 
 				//uzyskanie rozwi¹zañ
-				auto solutions = solveLinearEquation(u, d, l, b, matrix->front());
+				std::cout << "Rozwi¹zywanie czasu " << current_time << std::endl;
+				auto solutions = solveLinearEquation(u, d, l, b, matrix->at(past_position));
 
 				matrix->at(current_position).swap(solutions);
 
@@ -147,6 +150,9 @@ namespace MO
 					while (riinv_ud_element != iinv_ud->rend())
 					{
 						temp += *riinv_ud_element * *rib;
+
+						riinv_ud_element++;
+						rib++;
 					}
 
 					C.push_back(temp);
@@ -200,14 +206,105 @@ namespace MO
 			std::vector<double> x_prev;
 			x_prev.reserve(matrix_size);
 
+			unsigned int iter{ 0 };
+			const unsigned int maxIter{ 400 };
+			double maxE{ -1 };
+			const double etol{ 1e-15 };
+			double maxRes{ -1 };
+			const double restol{ 1e-15 };
+
 			do
 			{
 				std::swap(x, x_prev);
 				x.clear();
 
+				{
+					auto iM{ M.begin() };
+					auto iC{ C.begin() };
 
+					x.push_back(*iC);
+					iC++;
 
-			} while ()
+					while (iM != M.end())
+					{
+						double temp{ 0 };
+						auto riM{ iM->rbegin() };
+						auto rix_prev{ x_prev.rbegin() };
+
+						while (riM != iM->rend())
+						{
+							temp += *riM * *rix_prev;
+								
+							riM++;
+							rix_prev++;
+						}
+
+						x.push_back(temp + *iC);
+
+						iM++;
+						iC++;
+					}
+				}
+
+				iter++;
+
+				maxE = -1;
+				{
+					auto ix_prev{ x_prev.begin() };
+					auto ix{ x.begin() };
+					while (ix != x.end())
+					{
+						double e{ std::abs(*ix - *ix_prev) };
+						if (e > maxE) maxE = e;
+
+						ix++;
+						ix_prev++;
+					}
+				}
+
+				maxRes = -1;
+				{
+					std::vector<double> Ax;
+					Ax.reserve(matrix_size);
+
+					auto iu{ u.begin() };
+					auto id{ d.begin() };
+					auto il{ l.begin() };
+					auto ix1{ x.begin() };
+					auto ix2{ std::next(x.begin()) };
+					auto ix3{ std::next(x.begin(), 2) };
+
+					Ax.push_back((*ix1** id) + (*ix2 * *iu));
+					iu++;
+					id++;
+					while (iu != u.end())
+					{
+						Ax.push_back((*ix1 * *il) + (*ix2 * *id) + (*ix3 * *iu));
+
+						iu++;
+						id++;
+						il++;
+						ix1++;
+						ix2++;
+						ix3++;
+					}
+					Ax.push_back((*ix1 * *il) + (*ix2 * *id));
+
+					auto iAx{ Ax.begin() };
+					auto ib{ b.begin() };
+					while (ib != b.end())
+					{
+						double res{ std::abs(*ib - *iAx) };
+						if (res > maxRes) maxRes = res;
+
+						ib++;
+						iAx++;
+					}
+				}
+				if (iter%10 == 0) std::cout << "\tIteracja " << iter << std::endl;
+			} while ((iter < maxIter) && (maxE > etol) && (maxRes > restol));
+
+			return x;
 
 		}
 
