@@ -59,6 +59,17 @@ namespace MO
 				d.push_back(net->right_edge_condition_derivative(current_time) / net->h + net->right_edge_condition_function(current_time));
 
 				//uzyskanie rozwi¹zañ
+
+				//DEBUG
+				std::vector<double> debugu{ 1, 2, 3, 4 };
+				std::vector<double> debugd{ 1, 2, 3, 4, 5 };
+				std::vector<double> debugl{ 1, 2, 3, 4 };
+				std::vector<double> debugb{ 1, 2, 3, 4, 5 };
+				std::vector<double> debugx{ 1, 2, 3, 4, 5 };
+				auto debug_solutions = solveLinearEquation(debugu, debugd, debugl, debugb, debugx);
+
+
+
 				std::cout << "Rozwi¹zywanie czasu " << current_time << std::endl;
 				auto solutions = solveLinearEquation(u, d, l, b, matrix->at(past_position));
 
@@ -91,7 +102,7 @@ namespace MO
 				auto id{ d.begin() };
 				while (i != inv_ud.end())
 				{
-					i->push_back(*id);
+					i->push_back(1/(*id));
 					i++;
 					id++;
 				}
@@ -106,7 +117,7 @@ namespace MO
 			}
 
 			my_matrix_type M;
-			M.resize(matrix_size - 1);
+			/*M.resize(matrix_size - 1);
 			{
 				auto i{ M.begin() };
 				auto il{ l.begin() };
@@ -128,6 +139,19 @@ namespace MO
 					element_count--;
 				}
 
+			}*/
+			M.resize(matrix_size);
+			{
+				for (size_t i{ 0 }; i < matrix_size; i++)
+				{
+					M.at(i).reserve(i > 0 ? matrix_size - i + 1 : matrix_size);
+					for (size_t j{ i > 0 ? i - 1 : 0 }; j < matrix_size - 1; j++)
+					{
+						M.at(i).push_back((-(inv_ud.at(i).at(i > 0 ? 0 : 1)) * (l.at(j))));
+					}
+					M.at(i).push_back(0);
+				}
+
 			}
 
 			std::vector<double> x;
@@ -142,7 +166,7 @@ namespace MO
 				auto iinv_ud{ inv_ud.begin() };
 				//auto ib{ b.begin() };
 
-				{
+				/*{
 					double temp{ 0 };
 					auto riinv_ud_element{ iinv_ud->rbegin() };
 					auto rib{ b.rbegin() };
@@ -160,7 +184,7 @@ namespace MO
 
 				iinv_ud++;
 
-				x.push_back(C.back());
+				x.push_back(C.back());*/
 
 				while (iM != M.end())
 				{
@@ -222,8 +246,8 @@ namespace MO
 					auto iM{ M.begin() };
 					auto iC{ C.begin() };
 
-					x.push_back(*iC);
-					iC++;
+					/*x.push_back(*iC);
+					iC++;*/
 
 					while (iM != M.end())
 					{
