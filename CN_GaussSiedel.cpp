@@ -66,7 +66,7 @@ namespace MO
 				std::vector<double> debugl{ 1, 2, 3, 4 };
 				std::vector<double> debugb{ 1, 2, 3, 4, 5 };
 				std::vector<double> debugx{ 1, 2, 3, 4, 5 };
-				auto debug_solutions = solveLinearEquation(debugu, debugd, debugl, debugb, debugx);
+				//auto debug_solutions = solveLinearEquation(debugu, debugd, debugl, debugb, debugx);
 
 
 
@@ -142,7 +142,27 @@ namespace MO
 			}*/
 			M.resize(matrix_size);
 			{
-				for (size_t i{ 0 }; i < matrix_size; i++)
+
+				{
+					M.at(0).reserve(matrix_size);
+					for (size_t j{ 1 }; j < matrix_size; j++)
+					{
+						M.at(0).push_back((-(inv_ud.at(0).at(j))) * (l.at(j - 1)));
+					}
+					M.at(0).push_back(0);
+				}
+
+				for (size_t i{ 1 }; i < matrix_size; i++)
+				{
+					M.at(i).reserve(matrix_size - i + 1);
+					for (size_t j{ 0 }; j < matrix_size - i; j++)
+					{
+						M.at(i).push_back((-(inv_ud.at(i).at(j))) * (l.at(i + j - 1)));
+					}
+					M.at(i).push_back(0);
+				}
+
+				/*for (size_t i{ 0 }; i < matrix_size; i++)
 				{
 					M.at(i).reserve(i > 0 ? matrix_size - i + 1 : matrix_size);
 					for (size_t j{ i > 0 ? i - 1 : 0 }; j < matrix_size - 1; j++)
@@ -150,7 +170,7 @@ namespace MO
 						M.at(i).push_back((-(inv_ud.at(i).at(i > 0 ? 0 : 1)) * (l.at(j))));
 					}
 					M.at(i).push_back(0);
-				}
+				}*/
 
 			}
 
