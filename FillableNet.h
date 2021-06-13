@@ -27,7 +27,6 @@ namespace MO
 			, const double c
 			, const double d
 			, const double dt
-			//sprawdziæ czy mog¹ byæ const
 			, std::function<double(double, double)> filling_function
 		);
 		

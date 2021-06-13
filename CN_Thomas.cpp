@@ -1,8 +1,6 @@
 #include "CN_Thomas.h"
-//#include <iterator>
 #include <limits>
 #include <iostream>
-#include "simpleLogger.h"
 
 namespace MO
 {
@@ -18,12 +16,6 @@ namespace MO
 			const double minus_one_lambda{ -1 - lambda };
 			const double lambda_minus_one{ 1 - lambda };
 
-
-			/*for (
-				auto past_iterator{ matrix->begin() }, current_iterator{ std::next(past_iterator) };
-				current_iterator != matrix->end();
-				past_iterator++, current_iterator++
-				)*/
 			for (
 				unsigned int past_position = 0, current_position = 1;
 				current_position < matrix->size();

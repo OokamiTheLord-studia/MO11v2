@@ -8,7 +8,7 @@ namespace MO
 	{
 		using namespace MO;
 
-		
+
 
 		void CN_GaussSiedel::solveNet(Net* net)
 		{
@@ -18,12 +18,6 @@ namespace MO
 			const double minus_one_lambda{ -1 - lambda };
 			const double lambda_minus_one{ 1 - lambda };
 
-
-			/*for (
-				auto past_iterator{ matrix->begin() }, current_iterator{ std::next(past_iterator) };
-				current_iterator != matrix->end();
-				past_iterator++, current_iterator++
-				)*/
 			for (
 				unsigned int past_position = 0, current_position = 1;
 				current_position < matrix->size();
@@ -58,18 +52,6 @@ namespace MO
 				b.push_back(-(net->right_edge_condition_free_function(current_time)));
 				d.push_back(net->right_edge_condition_derivative(current_time) / net->h + net->right_edge_condition_function(current_time));
 
-				//uzyskanie rozwi¹zañ
-
-				//DEBUG
-				std::vector<double> debugu{ 1, 2, 3, 4 };
-				std::vector<double> debugd{ 1, 2, 3, 4, 5 };
-				std::vector<double> debugl{ 1, 2, 3, 4 };
-				std::vector<double> debugb{ 1, 2, 3, 4, 5 };
-				std::vector<double> debugx{ 1, 2, 3, 4, 5 };
-				//auto debug_solutions = solveLinearEquation(debugu, debugd, debugl, debugb, debugx);
-
-
-
 				std::cout << "Rozwi¹zywanie czasu " << current_time << std::endl;
 				auto solutions = solveLinearEquation(u, d, l, b, matrix->at(past_position));
 
@@ -86,11 +68,10 @@ namespace MO
 
 			my_matrix_type inv_ud;
 			inv_ud.resize(matrix_size);
-			//TODO: Po³¹czyæ ze sob¹
 			{
 				auto i{ inv_ud.begin() };
 				size_t element_count{ matrix_size };
-				while (i != inv_ud.end() )
+				while (i != inv_ud.end())
 				{
 					i->reserve(element_count);
 					i++;
@@ -102,7 +83,7 @@ namespace MO
 				auto id{ d.begin() };
 				while (i != inv_ud.end())
 				{
-					i->push_back(1/(*id));
+					i->push_back(1 / (*id));
 					i++;
 					id++;
 				}
@@ -117,29 +98,7 @@ namespace MO
 			}
 
 			my_matrix_type M;
-			/*M.resize(matrix_size - 1);
-			{
-				auto i{ M.begin() };
-				auto il{ l.begin() };
-				auto iinv_ud{ inv_ud.begin() };
-				auto element_count{ matrix_size };
 
-				while (i != M.end())
-				{
-					i->reserve(matrix_size);
-
-					for (auto iinv_ud_element : *iinv_ud)
-					{
-						i->push_back((-(iinv_ud_element)) * *il);
-					}
-
-					i++;
-					il++;
-					iinv_ud++;
-					element_count--;
-				}
-
-			}*/
 			M.resize(matrix_size);
 			{
 
@@ -162,15 +121,6 @@ namespace MO
 					M.at(i).push_back(0);
 				}
 
-				/*for (size_t i{ 0 }; i < matrix_size; i++)
-				{
-					M.at(i).reserve(i > 0 ? matrix_size - i + 1 : matrix_size);
-					for (size_t j{ i > 0 ? i - 1 : 0 }; j < matrix_size - 1; j++)
-					{
-						M.at(i).push_back((-(inv_ud.at(i).at(i > 0 ? 0 : 1)) * (l.at(j))));
-					}
-					M.at(i).push_back(0);
-				}*/
 
 			}
 
@@ -182,29 +132,7 @@ namespace MO
 
 			{
 				auto iM{ M.begin() };
-				//auto ix0{ std::next(x0.begin()) };
 				auto iinv_ud{ inv_ud.begin() };
-				//auto ib{ b.begin() };
-
-				/*{
-					double temp{ 0 };
-					auto riinv_ud_element{ iinv_ud->rbegin() };
-					auto rib{ b.rbegin() };
-
-					while (riinv_ud_element != iinv_ud->rend())
-					{
-						temp += *riinv_ud_element * *rib;
-
-						riinv_ud_element++;
-						rib++;
-					}
-
-					C.push_back(temp);
-				}
-
-				iinv_ud++;
-
-				x.push_back(C.back());*/
 
 				while (iM != M.end())
 				{
@@ -266,9 +194,6 @@ namespace MO
 					auto iM{ M.begin() };
 					auto iC{ C.begin() };
 
-					/*x.push_back(*iC);
-					iC++;*/
-
 					while (iM != M.end())
 					{
 						double temp{ 0 };
@@ -278,7 +203,7 @@ namespace MO
 						while (riM != iM->rend())
 						{
 							temp += *riM * *rix_prev;
-								
+
 							riM++;
 							rix_prev++;
 						}
@@ -318,7 +243,7 @@ namespace MO
 					auto ix2{ std::next(x.begin()) };
 					auto ix3{ std::next(x.begin(), 2) };
 
-					Ax.push_back((*ix1** id) + (*ix2 * *iu));
+					Ax.push_back((*ix1 * *id) + (*ix2 * *iu));
 					iu++;
 					id++;
 					while (iu != u.end())
@@ -345,7 +270,7 @@ namespace MO
 						iAx++;
 					}
 				}
-				if (iter%10 == 0) std::cout << "\tIteracja " << iter << std::endl;
+				if (iter % 10 == 0) std::cout << "\tIteracja " << iter << std::endl;
 			} while ((iter < maxIter) && (maxE > etol) && (maxRes > restol));
 
 			return x;
