@@ -35,6 +35,10 @@ namespace MO
 		double& at(const double t, const double x);
 
 		void dump(std::string filename);
+		void dumpForT(std::string, size_t);
+		void dumpForT(std::string, double);
+
+		std::vector<std::vector<double>>* getMatrix();
 
     };
 

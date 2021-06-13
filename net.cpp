@@ -167,6 +167,22 @@ namespace MO
 		file.close();
 	}
 
+	void Net::dumpForT(std::string filename, size_t t)
+	{
+		std::ofstream file;
+		file.open(filename);
+		for (auto ix_values{ x_values.cbegin() }; ix_values != x_values.cend(); ix_values++)
+		{
+			file << ix_values->first << "," << matrix.at(t).at(ix_values->second) << std::endl;
+		}
+		file.close();
+	}
+
+	void Net::dumpForT(std::string filename, double t)
+	{
+		dumpForT(filename, t_values.at(t));
+	}
+
 	void Net::solve(SolvingMethod* method)
 	{
 		method->solveNet(this);

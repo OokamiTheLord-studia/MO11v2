@@ -71,6 +71,8 @@ namespace MO
 		std::vector<std::vector<double>>* getMatrix();
 
 		void dump(std::string filename);
+		void dumpForT(std::string, size_t);
+		void dumpForT(std::string, double);
 
 		void solve(SolvingMethod*);
 
