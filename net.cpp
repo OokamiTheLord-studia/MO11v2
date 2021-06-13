@@ -145,6 +145,11 @@ namespace MO
 		return &matrix;
 	}
 
+	std::vector<double>* Net::getTPositions()
+	{
+		return &t_positions;
+	}
+
 	void Net::dump(std::string filename)
 	{
 		std::ofstream file;

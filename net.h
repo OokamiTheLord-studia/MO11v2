@@ -69,6 +69,7 @@ namespace MO
 		double& at(const double t, const double x);
 
 		std::vector<std::vector<double>>* getMatrix();
+		std::vector<double>* getTPositions();
 
 		void dump(std::string filename);
 		void dumpForT(std::string, size_t);

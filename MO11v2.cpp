@@ -178,7 +178,199 @@ int main()
     //testCNGaussSiedelSolvedNet.solve(&testKMBSolver);
 
     //Zad1
-    Zad1(x_begin, x_end, t_begin, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+    //Zad1(x_begin, x_end, t_begin, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+
+    {
+        constexpr double KMBh{ 0.01 };
+        constexpr double Thomh{ 0.01 };
+        constexpr double GSh{ 0.04 };
+
+        constexpr double KMBt{ 0.00004 };
+        constexpr double Thomt{ 0.0001 };
+        constexpr double GSt{ 0.0016 };
+
+        MO::FillableNet analiticSolutionForKMB(x_begin, x_end, KMBh, t_begin, t_max, KMBt, analyticSolution);
+        MO::FillableNet analiticSolutionForThom(x_begin, x_end, Thomh, t_begin, t_max, Thomt, analyticSolution);
+        MO::FillableNet analiticSolutionForGS(x_begin, x_end, GSh, t_begin, t_max, GSt, analyticSolution);
+
+        analiticSolutionForKMB.dump("Zad2_AnalKMB.csv");
+        analiticSolutionForThom.dump("Zad2_AnalThom.csv");
+        analiticSolutionForGS.dump("Zad2_AnalGS.csv");
+
+        return 0;
+    }
+
+    //Zad2 i Zad3
+    {
+        constexpr double KMBh{ 0.01 };
+        constexpr double Thomh{ 0.01 };
+        constexpr double GSh{ 0.04 };
+
+        constexpr double KMBt{ 0.00004 };
+        constexpr double Thomt{ 0.0001 };
+        constexpr double GSt{ 0.0016 };
+
+        constexpr double KMBlambda{ KMBt / (KMBh * KMBh) };
+        constexpr double Thomlambda{ Thomt / (Thomh * Thomh) };
+        constexpr double GSlambda{ GSt / (GSh * GSh) };
+
+        MO::FillableNet analiticSolutionForKMB(x_begin, x_end, KMBh, t_begin, t_max, KMBt, analyticSolution);
+        MO::Net KMBSolvedNet(x_begin, x_end, KMBh, t_begin, t_max, KMBt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+        MO::KMB KMBSolver(KMBlambda);
+
+        MO::FillableNet analiticSolutionForThom(x_begin, x_end, Thomh, t_begin, t_max, Thomt, analyticSolution);
+        MO::Net ThomSolvedNet(x_begin, x_end, Thomh, t_begin, t_max, Thomt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+        MO::Crank_Nicolson::CN_Thomas ThomasSolver(Thomlambda);
+
+        MO::FillableNet analiticSolutionForGS(x_begin, x_end, GSh, t_begin, t_max, GSt, analyticSolution);
+        MO::Net GSSolvedNet(x_begin, x_end, GSh, t_begin, t_max, GSt, start_condition, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter, edge_condition_derivative_parameter, edge_condition_function_parameter, edge_condition_free_function_parameter);
+        MO::Crank_Nicolson::CN_GaussSiedel GSSolver(GSlambda);
+
+        KMBSolvedNet.solve(&KMBSolver);
+        ThomSolvedNet.solve(&ThomasSolver);
+        GSSolvedNet.solve(&GSSolver);
+
+        KMBSolvedNet.dump("Zad2_KMB.csv");
+        ThomSolvedNet.dump("Zad2_Thomas.csv");
+        GSSolvedNet.dump("Zad2_GS.csv");
+
+        //Zad3
+        std::vector<double> KMBerr;
+        std::vector<double> Thomerr;
+        std::vector<double> GSerr;
+        KMBerr.reserve(KMBSolvedNet.getTPositions()->size());
+        Thomerr.reserve(ThomSolvedNet.getTPositions()->size());
+        GSerr.reserve(GSSolvedNet.getTPositions()->size());
+
+        {
+            auto matrixAnal{ analiticSolutionForKMB.getMatrix() };
+            auto matrixKMB{ KMBSolvedNet.getMatrix() };
+            auto iAnal{ matrixAnal->cbegin() };
+            auto iKMB{ matrixKMB->cbegin() };
+            while (iKMB != matrixKMB->cend())
+            {
+                double temp{ -1 };
+                auto iElemAnal{ iAnal->cbegin() };
+                auto iElemKMB{ iKMB->cbegin() };
+                while (iElemKMB != iKMB->cend())
+                {
+                    double temp2{ std::abs(*iElemAnal - *iElemKMB) };
+                    if (temp2 > temp) temp = temp2;
+
+                    iElemAnal++;
+                    iElemKMB++;
+                }
+
+                KMBerr.push_back(temp);
+
+                iAnal++;
+                iKMB++;
+            }
+        }
+        {
+            auto matrixAnal{ analiticSolutionForThom.getMatrix() };
+            auto matrixThom{ ThomSolvedNet.getMatrix() };
+            auto iAnal{ matrixAnal->cbegin() };
+            auto iThom{ matrixThom->cbegin() };
+            while (iThom != matrixThom->cend())
+            {
+                double temp{ -1 };
+                auto iElemAnal{ iAnal->cbegin() };
+                auto iElemThom{ iThom->cbegin() };
+                while (iElemThom != iThom->cend())
+                {
+                    double temp2{ std::abs(*iElemAnal - *iElemThom) };
+                    if (temp2 > temp) temp = temp2;
+
+                    iElemAnal++;
+                    iElemThom++;
+                }
+
+                Thomerr.push_back(temp);
+
+                iAnal++;
+                iThom++;
+            }
+        }
+        {
+            auto matrixAnal{ analiticSolutionForGS.getMatrix() };
+            auto matrixGS{ GSSolvedNet.getMatrix() };
+            auto iAnal{ matrixAnal->cbegin() };
+            auto iGS{ matrixGS->cbegin() };
+            while (iGS != matrixGS->cend())
+            {
+                double temp{ -1 };
+                auto iElemAnal{ iAnal->cbegin() };
+                auto iElemGS{ iGS->cbegin() };
+                while (iElemGS != iGS->cend())
+                {
+                    double temp2{ std::abs(*iElemAnal - *iElemGS) };
+                    if (temp2 > temp) temp = temp2;
+
+                    iElemAnal++;
+                    iElemGS++;
+                }
+
+                GSerr.push_back(temp);
+
+                iAnal++;
+                iGS++;
+            }
+        }
+
+        {
+            std::ofstream KMBfile;
+            KMBfile.open("Zad3_KMB.csv");
+
+            auto times{ KMBSolvedNet.getTPositions() };
+            auto itimes{ times->cbegin() };
+            auto iKMBerr{ KMBerr.cbegin() };
+
+            while (iKMBerr != KMBerr.cend())
+            {
+                KMBfile << *itimes << "," << *iKMBerr << std::endl;
+
+                iKMBerr++;
+                itimes++;
+            }
+
+        }
+        {
+            std::ofstream Thomfile;
+            Thomfile.open("Zad3_Thom.csv");
+
+            auto times{ ThomSolvedNet.getTPositions() };
+            auto itimes{ times->cbegin() };
+            auto iThomerr{ Thomerr.cbegin() };
+
+            while (iThomerr != Thomerr.cend())
+            {
+                Thomfile << *itimes << "," << *iThomerr << std::endl;
+
+                iThomerr++;
+                itimes++;
+            }
+
+        }
+        {
+            std::ofstream GSfile;
+            GSfile.open("Zad3_GS.csv");
+
+            auto times{ GSSolvedNet.getTPositions() };
+            auto itimes{ times->cbegin() };
+            auto iGSerr{ GSerr.cbegin() };
+
+            while (iGSerr != GSerr.cend())
+            {
+                GSfile << *itimes << "," << *iGSerr << std::endl;
+
+                iGSerr++;
+                itimes++;
+            }
+
+        }
+        
+    }
     
     
 }
